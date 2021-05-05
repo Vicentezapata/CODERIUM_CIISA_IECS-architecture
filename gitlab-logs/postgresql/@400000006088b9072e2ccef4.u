@@ -1,0 +1,19 @@
+2021-04-27_02:28:35.71604 LOG:  starting PostgreSQL 12.6 on x86_64-pc-linux-gnu, compiled by gcc (Ubuntu 9.3.0-17ubuntu1~20.04) 9.3.0, 64-bit
+2021-04-27_02:28:35.72014 LOG:  listening on Unix socket "/var/opt/gitlab/postgresql/.s.PGSQL.5432"
+2021-04-27_02:28:35.78269 LOG:  database system was interrupted; last known up at 2021-04-27 02:03:25 GMT
+2021-04-27_02:28:37.91923 LOG:  database system was not properly shut down; automatic recovery in progress
+2021-04-27_02:28:37.92375 LOG:  invalid record length at 0/3077C40: wanted 24, got 0
+2021-04-27_02:28:37.92377 LOG:  redo is not required
+2021-04-27_02:28:37.95283 LOG:  database system is ready to accept connections
+2021-04-27_02:51:44.07771 received TERM from runit, sending INT instead to force quit connections
+2021-04-27_02:51:44.07875 LOG:  received fast shutdown request
+2021-04-27_02:51:44.08123 LOG:  aborting any active transactions
+2021-04-27_02:51:44.08710 FATAL:  terminating connection due to administrator command
+2021-04-27_02:51:44.08712 FATAL:  terminating connection due to administrator command
+2021-04-27_02:51:44.08712 FATAL:  terminating connection due to administrator command
+2021-04-27_02:51:44.08713 FATAL:  terminating connection due to administrator command
+2021-04-27_02:51:44.08713 FATAL:  terminating connection due to administrator command
+2021-04-27_02:51:44.08713 FATAL:  terminating connection due to administrator command
+2021-04-27_02:51:44.09366 LOG:  background worker "logical replication launcher" (PID 307) exited with exit code 1
+2021-04-27_02:51:44.09568 LOG:  shutting down
+2021-04-27_02:51:44.10958 LOG:  database system is shut down

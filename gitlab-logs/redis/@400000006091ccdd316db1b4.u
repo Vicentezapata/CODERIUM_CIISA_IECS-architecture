@@ -1,0 +1,16 @@
+2021-05-04_22:14:59.60559 266:C 04 May 2021 22:14:59.605 # oO0OoO0OoO0Oo Redis is starting oO0OoO0OoO0Oo
+2021-05-04_22:14:59.62051 266:C 04 May 2021 22:14:59.620 # Redis version=6.0.10, bits=64, commit=8d70d498, modified=1, pid=266, just started
+2021-05-04_22:14:59.62054 266:C 04 May 2021 22:14:59.620 # Configuration loaded
+2021-05-04_22:14:59.62813 266:M 04 May 2021 22:14:59.628 * Running mode=standalone, port=0.
+2021-05-04_22:14:59.63958 266:M 04 May 2021 22:14:59.639 # Server initialized
+2021-05-04_22:14:59.63968 266:M 04 May 2021 22:14:59.639 # WARNING overcommit_memory is set to 0! Background save may fail under low memory condition. To fix this issue add 'vm.overcommit_memory = 1' to /etc/sysctl.conf and then reboot or run the command 'sysctl vm.overcommit_memory=1' for this to take effect.
+2021-05-04_22:14:59.64749 266:M 04 May 2021 22:14:59.647 * Loading RDB produced by version 6.0.10
+2021-05-04_22:14:59.64753 266:M 04 May 2021 22:14:59.647 * RDB age 4079 seconds
+2021-05-04_22:14:59.64754 266:M 04 May 2021 22:14:59.647 * RDB memory usage when created 5.71 Mb
+2021-05-04_22:14:59.68822 266:M 04 May 2021 22:14:59.688 * DB loaded from disk: 0.048 seconds
+2021-05-04_22:14:59.68825 266:M 04 May 2021 22:14:59.688 * The server is now ready to accept connections at /var/opt/gitlab/redis/redis.socket
+2021-05-04_22:22:13.16831 266:M 04 May 2021 22:22:13.168 * 10 changes in 300 seconds. Saving...
+2021-05-04_22:22:13.16942 266:M 04 May 2021 22:22:13.168 * Background saving started by pid 698
+2021-05-04_22:22:13.19121 698:C 04 May 2021 22:22:13.191 * DB saved on disk
+2021-05-04_22:22:13.19170 698:C 04 May 2021 22:22:13.191 * RDB: 0 MB of memory used by copy-on-write
+2021-05-04_22:22:13.27263 266:M 04 May 2021 22:22:13.272 * Background saving terminated with success

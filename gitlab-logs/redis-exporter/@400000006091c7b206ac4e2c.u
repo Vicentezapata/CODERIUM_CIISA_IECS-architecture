@@ -1,0 +1,2 @@
+2021-05-04_04:57:20.28140 time="2021-05-04T04:57:20Z" level=error msg="Couldn't set client name, err: read unix @->/var/opt/gitlab/redis/redis.socket: read: connection reset by peer"
+2021-05-04_04:57:20.28148 time="2021-05-04T04:57:20Z" level=error msg="Redis INFO err: write unix @->/var/opt/gitlab/redis/redis.socket: use of closed network connection"

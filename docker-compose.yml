@@ -1,0 +1,291 @@
+version: "3"
+services:
+  ########################################################## JENKINS ########################################################################
+  jenkins:
+    image: jenkins/jenkins:lts
+    restart: always
+    privileged: true
+    user: root
+    ports:
+      - 8081:8080
+      - 50000:50000
+    container_name: jenkins
+    volumes:
+      - ./jenkins_home:/var/jenkins_home
+      - ./jenkins-scripts:/opt/scripts
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /usr/local/bin/docker:/usr/local/bin/docker
+    networks:
+      - sonarnet
+  ########################################################## SONARCUBE ########################################################################
+  sonarqube:
+    image: sonarqube:8.8-community
+    container_name: sonarqube
+    command: 
+      - -Dsonar.ce.javaOpts=-Xmx1192m -Dsonar.web.javaOpts=-Xmx1192m
+    depends_on:
+      - sonarqube-db
+    ports:
+      - "9200:9000"
+    networks:
+      - sonarnet
+    restart: always
+    environment:
+      SONAR_JDBC_URL: jdbc:postgresql://sonarqube-db:5432/sonar
+      SONAR_JDBC_USERNAME: sonar
+      SONAR_JDBC_PASSWORD: sonar
+    volumes:
+      - ./sonarcube/sonarqube_data:/opt/sonarqube/data
+      - ./sonarcube/sonarqube_extensions:/opt/sonarqube/extensions
+      - ./sonarcube/sonarqube_logs:/opt/sonarqube/logs
+      - ./sonarcube/sonarqube_temp:/opt/sonarqube/temp
+      - ./sonarcube/sonarqube_conf:/opt/sonarqube/conf
+      - ./sonarcube/sonarqube_bundled-plugins:/opt/sonarqube/lib/bundled-plugins
+  sonarqube-db:
+    container_name: sonarqube-db
+    image: postgres
+    restart: always
+    networks:
+      - sonarnet
+    environment:
+      POSTGRES_USER: sonar
+      POSTGRES_PASSWORD: sonar
+    volumes:
+      - ./sonarqube-db/postgresql:/var/lib/postgresql
+      - ./sonarqube-db/postgresql_data:/var/lib/postgresql/data
+  ########################################################## Archerysec ########################################################################
+  # archerysec-db:
+  #   container_name: archerysec-db
+  #   image: postgres:10.1-alpine
+  #   restart: always
+  #   volumes:
+  #     - ./dbdata:/var/lib/postgresql/data
+  #   environment:
+  #     - POSTGRES_DB=archerysec
+  #     - POSTGRES_PASSWORD=archerysec
+  #     - POSTGRES_USER=archerysec
+
+  # archerysec:
+  #   image: archerysec/archerysec
+  #   restart: always
+  #   ports:
+  #     - "9300:8000"
+  #   expose:
+  #     - "8000"
+  #   depends_on:
+  #     - archerysec-db
+  #   links:
+  #     - archerysec-db:archerysec-db
+  #   environment:
+  #     - DB_PASSWORD=archerysec
+  #     - DB_USER=archerysec
+  #     - DB_NAME=archerysec
+  #     - DB_HOST=archerysec-db
+  #     - DJANGO_SETTINGS_MODULE=archerysecurity.settings.development
+  #     - DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY:-"SETME"}
+  #     - DJANGO_DEBUG=1
+  #     - EMAIL_HOST=mailhog
+  #     - EMAIL_PORT=1025
+  #   container_name: archerysec
+
+  # archerysec-worker:
+  #   image: archerysec/archerysec
+  #   restart: always
+  #   depends_on:
+  #     - archerysec-db
+  #     - archerysec
+  #   links:
+  #     - archerysec-db
+  #   environment:
+  #     - DB_PASSWORD=archerysec
+  #     - DB_USER=archerysec
+  #     - DB_NAME=archerysec
+  #     - DB_HOST=archerysec-db
+  #     - DJANGO_SETTINGS_MODULE=archerysecurity.settings.development
+  #     - DJANGO_SECRET_KEY=${DJANGO_SECRET_KEY:-"SETME"}
+  #     - DJANGO_DEBUG=1
+  #     - EMAIL_HOST=mailhog
+  #     - EMAIL_PORT=1025
+  #     - ARCHERY_WORKER=True
+  #   container_name: archerysec-worker
+  ################################################### Mailhog (Servidor correo Archerysec) ##################################################################
+  # mailhog:
+  #   image: mailhog/mailhog
+  #   restart: always
+  #   ports:
+  #     - "1025:1025"
+  #     - "8025:8025"
+  #   container_name: mailhog
+  ########################################################## OWASZAP ########################################################################
+  # zaproxy:
+  #   image: owasp/zap2docker-stable
+  #   restart: always
+  #   command: zap.sh -daemon -host 0.0.0.0 -port 8090 -config api.disablekey=true -config api.addrs.addr.name=.* -config api.addrs.addr.regex=true
+  #   ports:
+  #     - "8090:8090"
+  #   expose:
+  #   # ZAP is running on 8090, we want it to be accessible by our tools
+  #     - "8090"
+  #   environment:
+  #     - ZAP_PORT=8090
+  #   links:
+  #     - archerysec
+  #   container_name: zapscanner
+
+  ########################################################## Arachni ########################################################################
+  # arachni:
+  #   image: arachni/arachni
+  #   restart: always
+  #   ports:
+  #     - "9292:9292"
+  #     - "7331:7331"
+  #   environment:
+  #     - ARACHNI_PARAMS="--authentication-username arachni --authentication-password password --verbose --reroute-to-logfile --debug 3"
+  #   links:
+  #     - archerysec
+  #   container_name: arachniscanner
+  ########################################################## Openvas ########################################################################
+  # openvas:
+  #   image: avhost/docker-openvas
+  #   restart: always
+  #   ports:
+  #     - "443:443"
+  #     - "9390:9390"
+  #     - "9392:9392"
+  #   expose:
+  #     - "9390"
+  #     - "9392"
+  #     - "443"
+  #   links:
+  #     - archerysec
+  #   container_name: openvas
+  
+
+  ########################################################## Portainer ########################################################################
+  portainer:
+    image: portainer/portainer-ce:latest
+    container_name: portainer
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./portainer-data:/data
+    ports:
+      - 9100:9000
+      - 8000:8000
+
+
+  ########################################################## GITLAB ########################################################################
+  gitlab:
+    image: gitlab/gitlab-ce:latest
+    hostname: gitlab.iadso-labs.io
+    restart: unless-stopped
+    container_name: gitlab
+    environment:
+      GITLAB_OMNIBUS_CONFIG: |
+        gitlab_rails['gitlab_shell_ssh_port'] = 8822
+    ports:
+      - "8001:80"
+      - "8822:22"
+    volumes:
+      - ./gitlab-config/gitlab:/etc/gitlab
+      - ./gitlab-data/gitlab:/var/opt/gitlab
+      - ./gitlab-logs:/var/log/gitlab
+    networks:
+      - sonarnet
+
+  gitlab-runner:
+    image: gitlab/gitlab-runner:alpine
+    restart: unless-stopped
+    container_name: gitlab-runner
+    depends_on:
+      - gitlab
+    volumes:
+      - ./gitlab-config/gitlab-runner:/etc/gitlab-runner
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - sonarnet
+
+  ########################################################## Clair ########################################################################
+  clair:
+    container_name: clair
+    image: quay.io/coreos/clair-git:latest
+    restart: always
+    depends_on:
+      - clair-postgres
+    ports:
+      - "6060-6061:6060-6061"
+    volumes:
+      - /tmp:/tmp
+      - ./clair/clair_config:/config
+    command: [-config, /config/config.yaml]
+    networks:
+      - sonarnet
+  clair-postgres:
+    container_name: clair-postgres
+    image: postgres:latest
+    restart: unless-stopped
+    environment:
+      POSTGRES_PASSWORD: "ciisa2021"
+    networks:
+        - sonarnet
+
+  clair-postgres:
+    container_name: clair-postgres
+    image: postgres:9.6
+    restart: unless-stopped
+    volumes:
+      - ./clair/postgres-data/:/var/lib/postgresql/data:rw
+    environment:
+      - POSTGRES_PASSWORD=ciisa2021
+      - POSTGRES_USER=clair
+      - POSTGRES_DB=clair
+    networks:
+      - sonarnet
+    
+  clair:
+    container_name: clair
+    image: quay.io/coreos/clair:v2.0.0
+    restart: unless-stopped
+    volumes:
+      - ./clair/clair-config/:/config/:ro
+      - ./clair/clair-tmp/:/tmp/:rw
+    depends_on: 
+      clair-postgres:
+        condition: service_started
+    command: [--log-level=debug, --config, /config/config.yml]
+    networks:
+      - sonarnet
+    
+  clairctl:
+    container_name: clairctl
+    image: jgsqware/clairctl:latest
+    restart: unless-stopped
+    environment: 
+      - DOCKER_API_VERSION=1.24
+    volumes:
+      - ./clair/clairctl-reports/:/reports/:rw
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    networks:
+      - sonarnet
+    depends_on: 
+      clair: 
+        condition: service_started
+  
+  
+
+networks:
+  sonarnet:
+    driver: bridge
+
+volumes:
+  sonarqube_data:
+  sonarqube_extensions:
+  sonarqube_logs:
+  sonarqube_temp:
+  sonarqube_conf:
+  sonarqube_bundled-plugins:
+  postgresql:
+  postgresql_data:

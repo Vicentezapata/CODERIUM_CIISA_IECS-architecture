@@ -1,0 +1,1 @@
+2021-05-04_13:00:23.48893 t=2021-05-04T13:00:23+0000 lvl=eror msg="Failed to send usage stats" logger=metrics err="Post \"https://stats.grafana.org/grafana-usage-report\": context deadline exceeded (Client.Timeout exceeded while awaiting headers)"

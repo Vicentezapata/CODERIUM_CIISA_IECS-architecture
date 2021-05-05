@@ -1,0 +1,25 @@
+<?xml version='1.1' encoding='UTF-8'?>
+<flow-definition plugin="workflow-job@2.40">
+  <actions/>
+  <description></description>
+  <keepDependencies>false</keepDependencies>
+  <properties/>
+  <definition class="org.jenkinsci.plugins.workflow.cps.CpsFlowDefinition" plugin="workflow-cps@2.90">
+    <script>node {
+  stage(&apos;SCM&apos;) {
+    git &apos;https://github.com/remy/html5demos.git&apos;
+  }
+
+  stage(&apos;SonarQube analysis&apos;) {
+    // requires SonarQube Scanner 2.8+
+    def scannerHome = tool &apos;sonarScanner&apos;;//Mismo nombre que pusimos // en el global tool configuration
+    withSonarQubeEnv(&apos;SonarQube&apos;) { // El nombre de servidor que //pusimos en Configuración del sistema.
+      sh &quot;${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=fr.demo:my-project -Dsonar.sources=. -Dsonar.java.binaries=.&quot;
+    }
+  }
+}</script>
+    <sandbox>true</sandbox>
+  </definition>
+  <triggers/>
+  <disabled>false</disabled>
+</flow-definition>

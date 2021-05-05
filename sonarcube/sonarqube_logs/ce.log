@@ -1,0 +1,50 @@
+2021.05.05 05:53:27 INFO  ce[][o.s.p.ProcessEntryPoint] Starting ce
+2021.05.05 05:53:27 INFO  ce[][o.s.ce.app.CeServer] Compute Engine starting up...
+2021.05.05 05:53:29 INFO  ce[][o.s.s.e.EsClientProvider] Connected to local Elasticsearch: [http://localhost:9001]
+2021.05.05 05:53:34 INFO  ce[][o.sonar.db.Database] Create JDBC data source for jdbc:postgresql://sonarqube-db:5432/sonar
+2021.05.05 05:53:44 INFO  ce[][o.s.s.p.ServerFileSystemImpl] SonarQube home: /opt/sonarqube
+2021.05.05 05:53:45 INFO  ce[][o.s.c.c.CePluginRepository] Load plugins
+2021.05.05 05:53:51 INFO  ce[][o.s.c.c.ComputeEngineContainerImpl] Running Community edition
+2021.05.05 05:53:52 INFO  ce[][o.s.ce.app.CeServer] Compute Engine is operational
+2021.05.05 05:53:54 INFO  ce[][o.s.c.t.CeWorkerImpl] worker AXk7FvnA_HLqub9WfQCv found no pending task (including indexation task). Disabling indexation task lookup for this worker until next SonarQube restart.
+2021.05.05 06:19:31 INFO  ce[][o.s.p.ProcessEntryPoint] Starting ce
+2021.05.05 06:19:31 INFO  ce[][o.s.ce.app.CeServer] Compute Engine starting up...
+2021.05.05 06:19:33 INFO  ce[][o.s.s.e.EsClientProvider] Connected to local Elasticsearch: [http://localhost:9001]
+2021.05.05 06:19:37 INFO  ce[][o.sonar.db.Database] Create JDBC data source for jdbc:postgresql://sonarqube-db:5432/sonar
+2021.05.05 06:19:47 INFO  ce[][o.s.s.p.ServerFileSystemImpl] SonarQube home: /opt/sonarqube
+2021.05.05 06:19:48 INFO  ce[][o.s.c.c.CePluginRepository] Load plugins
+2021.05.05 06:19:53 INFO  ce[][o.s.c.c.ComputeEngineContainerImpl] Running Community edition
+2021.05.05 06:19:53 INFO  ce[][o.s.ce.app.CeServer] Compute Engine is operational
+2021.05.05 06:19:55 INFO  ce[][o.s.c.t.CeWorkerImpl] worker AXk7Ls1ys1oMByK4RAWn found no pending task (including indexation task). Disabling indexation task lookup for this worker until next SonarQube restart.
+2021.05.05 21:08:49 WARN  ce[][o.a.c.d.BasicDataSource] An internal object pool swallowed an Exception.
+org.postgresql.util.PSQLException: The connection attempt failed.
+	at org.postgresql.core.v3.ConnectionFactoryImpl.openConnectionImpl(ConnectionFactoryImpl.java:315)
+	at org.postgresql.core.ConnectionFactory.openConnection(ConnectionFactory.java:51)
+	at org.postgresql.jdbc.PgConnection.<init>(PgConnection.java:223)
+	at org.postgresql.Driver.makeConnection(Driver.java:465)
+	at org.postgresql.Driver.connect(Driver.java:264)
+	at org.apache.commons.dbcp2.DriverConnectionFactory.createConnection(DriverConnectionFactory.java:55)
+	at org.apache.commons.dbcp2.PoolableConnectionFactory.makeObject(PoolableConnectionFactory.java:355)
+	at org.apache.commons.pool2.impl.GenericObjectPool.create(GenericObjectPool.java:889)
+	at org.apache.commons.pool2.impl.GenericObjectPool.ensureIdle(GenericObjectPool.java:968)
+	at org.apache.commons.pool2.impl.GenericObjectPool.ensureMinIdle(GenericObjectPool.java:946)
+	at org.apache.commons.pool2.impl.BaseGenericObjectPool$Evictor.run(BaseGenericObjectPool.java:1148)
+	at java.base/java.util.concurrent.Executors$RunnableAdapter.call(Unknown Source)
+	at java.base/java.util.concurrent.FutureTask.runAndReset(Unknown Source)
+	at java.base/java.util.concurrent.ScheduledThreadPoolExecutor$ScheduledFutureTask.run(Unknown Source)
+	at java.base/java.util.concurrent.ThreadPoolExecutor.runWorker(Unknown Source)
+	at java.base/java.util.concurrent.ThreadPoolExecutor$Worker.run(Unknown Source)
+	at java.base/java.lang.Thread.run(Unknown Source)
+Caused by: java.net.SocketTimeoutException: null
+	at java.base/java.net.SocksSocketImpl.remainingMillis(Unknown Source)
+	at java.base/java.net.SocksSocketImpl.connect(Unknown Source)
+	at java.base/java.net.Socket.connect(Unknown Source)
+	at org.postgresql.core.PGStream.createSocket(PGStream.java:231)
+	at org.postgresql.core.PGStream.<init>(PGStream.java:95)
+	at org.postgresql.core.v3.ConnectionFactoryImpl.tryConnect(ConnectionFactoryImpl.java:98)
+	at org.postgresql.core.v3.ConnectionFactoryImpl.openConnectionImpl(ConnectionFactoryImpl.java:213)
+	... 16 common frames omitted
+2021.05.05 23:14:31 INFO  ce[][o.s.p.ProcessEntryPoint] Gracefully stopping process
+2021.05.05 23:14:31 INFO  ce[][o.s.ce.app.CeServer] Compute Engine is stopping...
+2021.05.05 23:14:31 INFO  ce[][o.s.c.t.CeProcessingSchedulerImpl] Gracefully stopping workers...
+2021.05.05 23:14:31 INFO  ce[][o.s.ce.app.CeServer] Compute Engine is stopped
