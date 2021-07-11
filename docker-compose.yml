@@ -117,20 +117,20 @@ services:
   #     - "8025:8025"
   #   container_name: mailhog
   ########################################################## OWASZAP ########################################################################
-  # zaproxy:
-  #   image: owasp/zap2docker-stable
-  #   restart: always
-  #   command: zap.sh -daemon -host 0.0.0.0 -port 8090 -config api.disablekey=true -config api.addrs.addr.name=.* -config api.addrs.addr.regex=true
-  #   ports:
-  #     - "8090:8090"
-  #   expose:
-  #   # ZAP is running on 8090, we want it to be accessible by our tools
-  #     - "8090"
-  #   environment:
-  #     - ZAP_PORT=8090
-  #   links:
-  #     - archerysec
-  #   container_name: zapscanner
+  #zaproxy:
+  #  image: owasp/zap2docker-stable
+  #  restart: always
+  #  command: zap.sh -daemon -host 0.0.0.0 -port 8090 -config api.disablekey=true -config api.addrs.addr.name=.* -config api.addrs.addr.regex=true
+  #  ports:
+  #    - "8090:8090"
+  #  expose:
+  #  # ZAP is running on 8090, we want it to be accessible by our tools
+  #    - "8090"
+  #  environment:
+  #    - ZAP_PORT=8090
+  #  # links:
+  #  #   - archerysec
+  #  container_name: zapscanner
 
   ########################################################## Arachni ########################################################################
   # arachni:
@@ -145,20 +145,20 @@ services:
   #     - archerysec
   #   container_name: arachniscanner
   ########################################################## Openvas ########################################################################
-  # openvas:
-  #   image: avhost/docker-openvas
-  #   restart: always
-  #   ports:
-  #     - "443:443"
-  #     - "9390:9390"
-  #     - "9392:9392"
-  #   expose:
-  #     - "9390"
-  #     - "9392"
-  #     - "443"
-  #   links:
-  #     - archerysec
-  #   container_name: openvas
+  #openvas:
+  #  image: mikesplain/openvas
+  #  restart: always
+  #  ports:
+  #    - "443:443"
+  #    - "9390:9390"
+  #    - "9392:9392"
+  #  expose:
+  #    - "9390"
+  #    - "9392"
+  #    - "443"
+  #  #links:
+  #  #  - archerysec
+  #  container_name: openvas
   
 
   ########################################################## Portainer ########################################################################
@@ -209,70 +209,70 @@ services:
       - sonarnet
 
   ########################################################## Clair ########################################################################
-  clair:
-    container_name: clair
-    image: quay.io/coreos/clair-git:latest
-    restart: always
-    depends_on:
-      - clair-postgres
-    ports:
-      - "6060-6061:6060-6061"
-    volumes:
-      - /tmp:/tmp
-      - ./clair/clair_config:/config
-    command: [-config, /config/config.yaml]
-    networks:
-      - sonarnet
-  clair-postgres:
-    container_name: clair-postgres
-    image: postgres:latest
-    restart: unless-stopped
-    environment:
-      POSTGRES_PASSWORD: "ciisa2021"
-    networks:
-        - sonarnet
+  # clair:
+  #   container_name: clair
+  #   image: quay.io/coreos/clair-git:latest
+  #   restart: always
+  #   depends_on:
+  #     - clair-postgres
+  #   ports:
+  #     - "6060-6061:6060-6061"
+  #   volumes:
+  #     - /tmp:/tmp
+  #     - ./clair/clair_config:/config
+  #   command: [-config, /config/config.yaml]
+  #   networks:
+  #     - sonarnet
+  # clair-postgres:
+  #   container_name: clair-postgres
+  #   image: postgres:latest
+  #   restart: unless-stopped
+  #   environment:
+  #     POSTGRES_PASSWORD: "ciisa2021"
+  #   networks:
+  #       - sonarnet
 
-  clair-postgres:
-    container_name: clair-postgres
-    image: postgres:9.6
-    restart: unless-stopped
-    volumes:
-      - ./clair/postgres-data/:/var/lib/postgresql/data:rw
-    environment:
-      - POSTGRES_PASSWORD=ciisa2021
-      - POSTGRES_USER=clair
-      - POSTGRES_DB=clair
-    networks:
-      - sonarnet
+  # clair-postgres:
+  #   container_name: clair-postgres
+  #   image: postgres:9.6
+  #   restart: unless-stopped
+  #   volumes:
+  #     - ./clair/postgres-data/:/var/lib/postgresql/data:rw
+  #   environment:
+  #     - POSTGRES_PASSWORD=ciisa2021
+  #     - POSTGRES_USER=clair
+  #     - POSTGRES_DB=clair
+  #   networks:
+  #     - sonarnet
     
-  clair:
-    container_name: clair
-    image: quay.io/coreos/clair:v2.0.0
-    restart: unless-stopped
-    volumes:
-      - ./clair/clair-config/:/config/:ro
-      - ./clair/clair-tmp/:/tmp/:rw
-    depends_on: 
-      clair-postgres:
-        condition: service_started
-    command: [--log-level=debug, --config, /config/config.yml]
-    networks:
-      - sonarnet
+  # clair:
+  #   container_name: clair
+  #   image: quay.io/coreos/clair:v2.0.0
+  #   restart: unless-stopped
+  #   volumes:
+  #     - ./clair/clair-config/:/config/:ro
+  #     - ./clair/clair-tmp/:/tmp/:rw
+  #   depends_on: 
+  #     clair-postgres:
+  #       condition: service_started
+  #   command: [--log-level=debug, --config, /config/config.yml]
+  #   networks:
+  #     - sonarnet
     
-  clairctl:
-    container_name: clairctl
-    image: jgsqware/clairctl:latest
-    restart: unless-stopped
-    environment: 
-      - DOCKER_API_VERSION=1.24
-    volumes:
-      - ./clair/clairctl-reports/:/reports/:rw
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-    networks:
-      - sonarnet
-    depends_on: 
-      clair: 
-        condition: service_started
+  # clairctl:
+  #   container_name: clairctl
+  #   image: jgsqware/clairctl:latest
+  #   restart: unless-stopped
+  #   environment: 
+  #     - DOCKER_API_VERSION=1.24
+  #   volumes:
+  #     - ./clair/clairctl-reports/:/reports/:rw
+  #     - /var/run/docker.sock:/var/run/docker.sock:ro
+  #   networks:
+  #     - sonarnet
+  #   depends_on: 
+  #     clair: 
+  #       condition: service_started
   
   
 
