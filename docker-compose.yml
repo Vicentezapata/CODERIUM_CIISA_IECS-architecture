@@ -53,6 +53,54 @@ services:
     volumes:
       - ./sonarqube-db/postgresql:/var/lib/postgresql
       - ./sonarqube-db/postgresql_data:/var/lib/postgresql/data
+
+  ########################################################## Portainer ########################################################################
+  portainer:
+    image: portainer/portainer-ce:latest
+    container_name: portainer
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./portainer-data:/data
+    ports:
+      - 9100:9000
+      - 8000:8000
+
+
+  ########################################################## GITLAB ########################################################################
+  gitlab:
+    image: gitlab/gitlab-ce:latest
+    hostname: gitlab.iadso-labs.io
+    restart: unless-stopped
+    container_name: gitlab
+    environment:
+      GITLAB_OMNIBUS_CONFIG: |
+        gitlab_rails['gitlab_shell_ssh_port'] = 8822
+    ports:
+      - "8001:80"
+      - "8822:22"
+    volumes:
+      - ./gitlab-config/gitlab:/etc/gitlab
+      - ./gitlab-data/gitlab:/var/opt/gitlab
+      - ./gitlab-logs:/var/log/gitlab
+    networks:
+      - sonarnet
+
+  gitlab-runner:
+    image: gitlab/gitlab-runner:alpine
+    restart: unless-stopped
+    container_name: gitlab-runner
+    depends_on:
+      - gitlab
+    volumes:
+      - ./gitlab-config/gitlab-runner:/etc/gitlab-runner
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      - sonarnet 
+      
   ########################################################## Archerysec ########################################################################
   # archerysec-db:
   #   container_name: archerysec-db
@@ -161,120 +209,7 @@ services:
   #  container_name: openvas
   
 
-  ########################################################## Portainer ########################################################################
-  portainer:
-    image: portainer/portainer-ce:latest
-    container_name: portainer
-    restart: unless-stopped
-    security_opt:
-      - no-new-privileges:true
-    volumes:
-      - /etc/localtime:/etc/localtime:ro
-      - /var/run/docker.sock:/var/run/docker.sock:ro
-      - ./portainer-data:/data
-    ports:
-      - 9100:9000
-      - 8000:8000
-
-
-  ########################################################## GITLAB ########################################################################
-  gitlab:
-    image: gitlab/gitlab-ce:latest
-    hostname: gitlab.iadso-labs.io
-    restart: unless-stopped
-    container_name: gitlab
-    environment:
-      GITLAB_OMNIBUS_CONFIG: |
-        gitlab_rails['gitlab_shell_ssh_port'] = 8822
-    ports:
-      - "8001:80"
-      - "8822:22"
-    volumes:
-      - ./gitlab-config/gitlab:/etc/gitlab
-      - ./gitlab-data/gitlab:/var/opt/gitlab
-      - ./gitlab-logs:/var/log/gitlab
-    networks:
-      - sonarnet
-
-  gitlab-runner:
-    image: gitlab/gitlab-runner:alpine
-    restart: unless-stopped
-    container_name: gitlab-runner
-    depends_on:
-      - gitlab
-    volumes:
-      - ./gitlab-config/gitlab-runner:/etc/gitlab-runner
-      - /var/run/docker.sock:/var/run/docker.sock
-    networks:
-      - sonarnet
-
-  ########################################################## Clair ########################################################################
-  # clair:
-  #   container_name: clair
-  #   image: quay.io/coreos/clair-git:latest
-  #   restart: always
-  #   depends_on:
-  #     - clair-postgres
-  #   ports:
-  #     - "6060-6061:6060-6061"
-  #   volumes:
-  #     - /tmp:/tmp
-  #     - ./clair/clair_config:/config
-  #   command: [-config, /config/config.yaml]
-  #   networks:
-  #     - sonarnet
-  # clair-postgres:
-  #   container_name: clair-postgres
-  #   image: postgres:latest
-  #   restart: unless-stopped
-  #   environment:
-  #     POSTGRES_PASSWORD: "ciisa2021"
-  #   networks:
-  #       - sonarnet
-
-  # clair-postgres:
-  #   container_name: clair-postgres
-  #   image: postgres:9.6
-  #   restart: unless-stopped
-  #   volumes:
-  #     - ./clair/postgres-data/:/var/lib/postgresql/data:rw
-  #   environment:
-  #     - POSTGRES_PASSWORD=ciisa2021
-  #     - POSTGRES_USER=clair
-  #     - POSTGRES_DB=clair
-  #   networks:
-  #     - sonarnet
-    
-  # clair:
-  #   container_name: clair
-  #   image: quay.io/coreos/clair:v2.0.0
-  #   restart: unless-stopped
-  #   volumes:
-  #     - ./clair/clair-config/:/config/:ro
-  #     - ./clair/clair-tmp/:/tmp/:rw
-  #   depends_on: 
-  #     clair-postgres:
-  #       condition: service_started
-  #   command: [--log-level=debug, --config, /config/config.yml]
-  #   networks:
-  #     - sonarnet
-    
-  # clairctl:
-  #   container_name: clairctl
-  #   image: jgsqware/clairctl:latest
-  #   restart: unless-stopped
-  #   environment: 
-  #     - DOCKER_API_VERSION=1.24
-  #   volumes:
-  #     - ./clair/clairctl-reports/:/reports/:rw
-  #     - /var/run/docker.sock:/var/run/docker.sock:ro
-  #   networks:
-  #     - sonarnet
-  #   depends_on: 
-  #     clair: 
-  #       condition: service_started
-  
-  
+ 
 
 networks:
   sonarnet:
