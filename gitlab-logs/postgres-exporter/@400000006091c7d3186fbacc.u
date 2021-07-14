@@ -1,2 +1,0 @@
-2021-05-04_08:48:30.65122 time="2021-05-04T08:48:30Z" level=info msg="Error running query on database \"/var/opt/gitlab/postgresql:5432\": pg_vacuum_queue pq: canceling statement due to statement timeout" source="postgres_exporter.go:1356"
-2021-05-04_08:48:30.73225 time="2021-05-04T08:48:30Z" level=error msg="queryNamespaceMappings returned 1 errors" source="postgres_exporter.go:1474"

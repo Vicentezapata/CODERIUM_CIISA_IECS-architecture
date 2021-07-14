@@ -1,0 +1,183 @@
+<?xml version='1.1' encoding='UTF-8'?>
+<flow-build plugin="workflow-job@2.40">
+  <actions>
+    <hudson.model.CauseAction>
+      <causeBag class="linked-hash-map">
+        <entry>
+          <hudson.model.Cause_-UserIdCause>
+            <userId>vzapata</userId>
+          </hudson.model.Cause_-UserIdCause>
+          <int>1</int>
+        </entry>
+      </causeBag>
+    </hudson.model.CauseAction>
+    <org.jenkinsci.plugins.workflow.libs.LibrariesAction plugin="workflow-cps-global-lib@2.19">
+      <libraries/>
+    </org.jenkinsci.plugins.workflow.libs.LibrariesAction>
+    <org.jenkinsci.plugins.workflow.cps.EnvActionImpl plugin="workflow-cps@2.90">
+      <env class="tree-map">
+        <entry>
+          <string>DOCKER</string>
+          <string>/var/jenkins_home/tools/org.jenkinsci.plugins.docker.commons.tools.DockerTool/docker</string>
+        </entry>
+        <entry>
+          <string>DOCKER_EXEC</string>
+          <string>/var/jenkins_home/tools/org.jenkinsci.plugins.docker.commons.tools.DockerTool/docker/bin/docker</string>
+        </entry>
+        <entry>
+          <string>REPO</string>
+          <string>https://github.com/Vicentezapata/IADSO_CIISA_IECS_REPO_TEST.git</string>
+        </entry>
+        <entry>
+          <string>SONARSCANNER</string>
+          <string>/var/jenkins_home/tools/hudson.plugins.sonar.SonarRunnerInstallation/sonarqube-scanner</string>
+        </entry>
+      </env>
+    </org.jenkinsci.plugins.workflow.cps.EnvActionImpl>
+    <org.jenkinsci.plugins.workflow.support.steps.input.InputAction plugin="pipeline-input-step@2.12">
+      <ids class="java.util.concurrent.CopyOnWriteArrayList"/>
+    </org.jenkinsci.plugins.workflow.support.steps.input.InputAction>
+    <jenkins.model.InterruptedBuildAction>
+      <causes class="com.google.common.collect.ImmutableList">
+        <org.jenkinsci.plugins.workflow.support.steps.input.Rejection plugin="pipeline-input-step@2.12">
+          <userName>SYSTEM</userName>
+          <timestamp>1621223307328</timestamp>
+        </org.jenkinsci.plugins.workflow.support.steps.input.Rejection>
+      </causes>
+    </jenkins.model.InterruptedBuildAction>
+  </actions>
+  <queueId>265</queueId>
+  <timestamp>1621223125986</timestamp>
+  <startTime>1621223125988</startTime>
+  <result>ABORTED</result>
+  <duration>181442</duration>
+  <charset>UTF-8</charset>
+  <keepLog>false</keepLog>
+  <execution class="org.jenkinsci.plugins.workflow.cps.CpsFlowExecution">
+    <result>ABORTED</result>
+    <script>node {
+    env.REPO = &quot;https://github.com/Vicentezapata/IADSO_CIISA_IECS_REPO_TEST.git&quot;
+    //VARIABLES DE ENTORNO
+    env.DOCKER = tool &apos;docker&apos;;//Mismo nombre que pusimos // en el global tool configuration
+    env.SONARSCANNER = tool &apos;sonarqube-scanner&apos;;//Mismo nombre que pusimos // en el global tool configuration
+    env.DOCKER_EXEC = &quot;${DOCKER}/bin/docker&quot;;
+    stage(&apos;Descargar Codigo (SCM)&apos;) {
+        sh &quot;echo ${WORKSPACE}&quot;
+        timeout(time: 3, unit: &apos;MINUTES&apos;){
+            input = input(
+            id: &apos;userInput&apos;, messasge: &apos;Valores para PMV&apos;,
+            parameters: [
+                string(description: &apos;Nombre del proyecto&apos;, name: &apos;Name_Project&apos;,defaultValue: &apos;IADSO_CIISA_IECS_REPO_TEST&apos;),
+                string(description: &apos;Url de repositorio&apos;, name: &apos;Git_Url&apos;,defaultValue: &apos;https://github.com/Vicentezapata/IADSO_CIISA_IECS_REPO_TEST.git&apos;),
+                choice(
+                description: &apos;Tipo de repositorio&apos;,
+                choices: [&apos;Publico&apos;, &apos;Privado&apos;],
+                name: &apos;Type_Repo&apos;
+                ),
+                choice(
+                description: &apos;Categorizacion&apos;,
+                choices: [&apos;WEBPAGE&apos;, &apos;MOBILE&apos;],
+                name: &apos;Type_Cat&apos;
+                )
+            ]
+            )
+        }
+        //VARIABLES DE PIPELINE
+        env.PROJECT     = input.Name_Project.replace(&quot; &quot;,&quot;_&quot;)
+        env.GITPROJECT  = input.Git_Url
+        env.TYPEREPO    = input.Type_Repo
+        env.CATEGORY    = input.Type_Cat
+        git input.Git_Url
+    }
+    stage(&apos;Control SAST&apos;) {
+        // requires SonarQube Scanner 2.8+
+        println &quot;**************************************************************************************************&quot;
+        println &quot;*                                          SAST                                                  *&quot;
+        println &quot;**************************************************************************************************&quot;
+        println &quot;TOOL SONNAR-SCANNER: ${SONARSCANNER}&quot;
+        withSonarQubeEnv(&apos;SonarQube&apos;) { // El nombre de servidor que //pusimos en Configuración del sistema.
+            sh &quot;${SONARSCANNER}/bin/sonar-scanner -Dsonar.projectKey=&apos;${PROJECT}&apos; -Dsonar.sources=. -Dsonar.java.binaries=.&quot;
+        }
+    }
+    stage(&apos;Control IaC Security&apos;) {
+        println &quot;**************************************************************************************************&quot;
+        println &quot;*                                      IaC Security                                              *&quot;
+        println &quot;**************************************************************************************************&quot;  
+        
+        println &quot;TOOL docker: ${DOCKER}&quot;
+        if (env.CATEGORY.equals(&quot;WEBPAGE&quot;)){
+            sh &apos;&apos;&apos;
+                if [ $( ${DOCKER_EXEC} ps -a | grep  apache-app | wc -l ) -gt 0 ]; then
+                    ${DOCKER_EXEC} rm -f apache-app
+                    ${DOCKER_EXEC} run -dit --name apache-app -p 8085:80 -v &apos;/home/ciisa/Escritorio/Proyecto de titulo//jenkins-scripts/servidores_DAST/apache/&apos;:/usr/local/apache2/htdocs/ httpd:2.4
+                else
+                    ${DOCKER_EXEC} run -dit --name apache-app -p 8085:80 -v &apos;/home/ciisa/Escritorio/Proyecto de titulo//jenkins-scripts/servidores_DAST/apache/&apos;:/usr/local/apache2/htdocs/ httpd:2.4
+                fi
+            &apos;&apos;&apos;
+        }
+        sh &quot;${DOCKER_EXEC} pull aquasec/trivy:latest&quot;
+        sh &quot;${DOCKER_EXEC} run --rm -v &apos;/home/ciisa/Escritorio/Proyecto de titulo/trivy/trivy-cache/&apos;:/root/.cache/ aquasec/trivy:latest httpd:2.4 &gt; &apos;/opt/scripts/OutputTrivy.txt&apos;&quot;
+        sh &quot;rm -rf /opt/scripts/servidores_DAST/apache/${PROJECT}&quot;
+        sh &quot;git clone ${REPO} /opt/scripts/servidores_DAST/apache/${PROJECT}&quot;
+        println &quot;*************************************************************&quot; 
+        println &quot;*************** Vulnerabilidades detectadas  ****************&quot; 
+        println &quot;*************************************************************&quot; 
+        sh &quot;cat /opt/scripts/OutputTrivy.txt&quot;
+    }
+    stage(&apos;Vulnerability Checks&apos;) {
+        println &quot;**************************************************************************************************&quot;
+        println &quot;*                                   Vulnerability Checks                                         *&quot;
+        println &quot;**************************************************************************************************&quot; 
+        println &quot;TOOL docker: ${DOCKER}&quot;
+        //sh &quot;${DOCKER_EXEC} ps&quot;
+        sh &quot;${DOCKER_EXEC} pull kanolato/rapidscan:latest&quot;
+        sh &quot;${DOCKER_EXEC} run -t --rm -v /opt/scripts/reports_rapiscan:/reports kanolato/rapidscan http://localhost:8085/${PROJECT}/ &gt; &apos;/opt/scripts/OutputRapidscan.txt&apos;&quot;
+        println &quot;*************************************************************&quot; 
+        println &quot;*************** Vulnerabilidades detectadas  ****************&quot; 
+        println &quot;*************************************************************&quot; 
+        sh &quot;cat /opt/scripts/OutputRapidscan.txt&quot;
+    }
+    stage(&apos;Process Report&apos;) {
+        println &quot;**************************************************************************************************&quot;
+        println &quot;*                                   Procesando Reportes                                          *&quot;
+        println &quot;**************************************************************************************************&quot; 
+    }
+    stage(&apos;Send Report&apos;) {
+        println &quot;**************************************************************************************************&quot;
+        println &quot;*                                     Enviando Reportes                                          *&quot;
+        println &quot;**************************************************************************************************&quot; 
+    }
+}</script>
+    <loadedScripts class="map"/>
+    <durabilityHint>MAX_SURVIVABILITY</durabilityHint>
+    <timings class="map">
+      <entry>
+        <string>flowNode</string>
+        <long>117845844</long>
+      </entry>
+      <entry>
+        <string>classLoad</string>
+        <long>353098556</long>
+      </entry>
+      <entry>
+        <string>run</string>
+        <long>321464914</long>
+      </entry>
+      <entry>
+        <string>parse</string>
+        <long>382336565</long>
+      </entry>
+      <entry>
+        <string>saveProgram</string>
+        <long>53075873</long>
+      </entry>
+    </timings>
+    <sandbox>true</sandbox>
+    <iota>19</iota>
+    <head>1:19</head>
+    <done>true</done>
+    <resumeBlocked>false</resumeBlocked>
+  </execution>
+  <completed>true</completed>
+  <checkouts class="hudson.util.PersistedList"/>
+</flow-build>

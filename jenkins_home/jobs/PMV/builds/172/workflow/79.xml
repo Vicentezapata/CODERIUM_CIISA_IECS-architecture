@@ -1,0 +1,43 @@
+<?xml version='1.1' encoding='UTF-8'?>
+<Tag plugin="workflow-support@3.8">
+  <node class="cps.n.StepAtomNode" plugin="workflow-cps@2.90">
+    <parentIds>
+      <string>78</string>
+    </parentIds>
+    <id>79</id>
+    <descriptorId>org.jenkinsci.plugins.workflow.steps.MailStep</descriptorId>
+  </node>
+  <actions>
+    <cps.a.ArgumentsActionImpl plugin="workflow-cps@2.90">
+      <arguments>
+        <entry>
+          <string>from</string>
+          <string>testvzapataciisa@gmail.com</string>
+        </entry>
+        <entry>
+          <string>to</string>
+          <string>vicentezapatac@gmail.com</string>
+        </entry>
+        <entry>
+          <string>body</string>
+          <string>Enlace de Ejecucion: http://localhost:8081/job/PMV/172/
+Proyecto: IADSO_CIISA_IECS_REPO_TEST
+Url repositorio: https://github.com/Vicentezapata/IADSO_CIISA_IECS_REPO_TEST.git
+Tipo de repositorio: Publico
+Categoria del repositorio: WEBPAGE
+Enlace de reporte: http://localhost:8081/job/PMV/168/artifact/INFORME DE VULNERABILIDADES - IADSO_CIISA_IECS_REPO_TEST.pdf</string>
+        </entry>
+        <entry>
+          <string>subject</string>
+          <string>Analisis de Vulnerabilidades proyecto IADSO_CIISA_IECS_REPO_TEST</string>
+        </entry>
+      </arguments>
+      <sensitiveVariables/>
+      <isUnmodifiedBySanitization>true</isUnmodifiedBySanitization>
+    </cps.a.ArgumentsActionImpl>
+    <wf.a.TimingAction plugin="workflow-api@2.42">
+      <startTime>1621966910652</startTime>
+    </wf.a.TimingAction>
+    <s.a.LogStorageAction/>
+  </actions>
+</Tag>

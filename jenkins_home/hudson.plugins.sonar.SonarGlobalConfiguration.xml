@@ -3,22 +3,8 @@
   <installations>
     <hudson.plugins.sonar.SonarInstallation>
       <name>SonarQube</name>
-      <serverUrl>http://localhost:9200</serverUrl>
-      <credentialsId></credentialsId>
-      <webhookSecretId></webhookSecretId>
-      <mojoVersion></mojoVersion>
-      <additionalProperties></additionalProperties>
-      <additionalAnalysisProperties></additionalAnalysisProperties>
-      <triggers>
-        <skipScmCause>false</skipScmCause>
-        <skipUpstreamCause>false</skipUpstreamCause>
-        <envVar></envVar>
-      </triggers>
-    </hudson.plugins.sonar.SonarInstallation>
-    <hudson.plugins.sonar.SonarInstallation>
-      <name></name>
-      <serverUrl></serverUrl>
-      <credentialsId></credentialsId>
+      <serverUrl>http://sonarqube:9000</serverUrl>
+      <credentialsId>sonar</credentialsId>
       <webhookSecretId></webhookSecretId>
       <mojoVersion></mojoVersion>
       <additionalProperties></additionalProperties>

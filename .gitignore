@@ -1,0 +1,13 @@
+# gitignore for CODERIUM project
+
+# Ignorando inforamcion de vulemenes creados
+/Capturas de pantalla
+/dbdata
+/gitlab-config
+/gitlab-data
+/gitlab-logs
+/portainer-data
+/sonarcube
+/sonarcube-db
+/trivy
+

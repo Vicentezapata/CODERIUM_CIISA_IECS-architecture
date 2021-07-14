@@ -1,0 +1,138 @@
+<?xml version='1.1' encoding='UTF-8'?>
+<flow-build plugin="workflow-job@2.40">
+  <actions>
+    <org.jenkinsci.plugins.workflow.cps.replay.ReplayFlowFactoryAction plugin="workflow-cps@2.90">
+      <replacementLoadedScripts/>
+    </org.jenkinsci.plugins.workflow.cps.replay.ReplayFlowFactoryAction>
+    <hudson.model.CauseAction>
+      <causeBag class="linked-hash-map">
+        <entry>
+          <hudson.model.Cause_-UserIdCause>
+            <userId>vzapata</userId>
+          </hudson.model.Cause_-UserIdCause>
+          <int>1</int>
+        </entry>
+        <entry>
+          <org.jenkinsci.plugins.workflow.cps.replay.ReplayCause plugin="workflow-cps@2.90">
+            <originalNumber>115</originalNumber>
+          </org.jenkinsci.plugins.workflow.cps.replay.ReplayCause>
+          <int>1</int>
+        </entry>
+      </causeBag>
+    </hudson.model.CauseAction>
+    <org.jenkinsci.plugins.workflow.libs.LibrariesAction plugin="workflow-cps-global-lib@2.19">
+      <libraries/>
+    </org.jenkinsci.plugins.workflow.libs.LibrariesAction>
+    <org.jenkinsci.plugins.workflow.cps.EnvActionImpl plugin="workflow-cps@2.90">
+      <env class="tree-map">
+        <entry>
+          <string>REPO</string>
+          <string>https://github.com/Vicentezapata/IADSO_CIISA_IECS_REPO_TEST.git</string>
+        </entry>
+      </env>
+    </org.jenkinsci.plugins.workflow.cps.EnvActionImpl>
+    <org.jenkinsci.plugins.workflow.support.steps.input.InputAction plugin="pipeline-input-step@2.12">
+      <ids class="java.util.concurrent.CopyOnWriteArrayList"/>
+    </org.jenkinsci.plugins.workflow.support.steps.input.InputAction>
+    <com.cloudbees.plugins.credentials.builds.CredentialsParameterBinder plugin="credentials@2.3.18">
+      <boundCredentials class="concurrent-hash-map"/>
+    </com.cloudbees.plugins.credentials.builds.CredentialsParameterBinder>
+    <org.jenkinsci.plugins.workflow.support.steps.input.ApproverAction plugin="pipeline-input-step@2.12">
+      <userId>vzapata</userId>
+    </org.jenkinsci.plugins.workflow.support.steps.input.ApproverAction>
+  </actions>
+  <queueId>225</queueId>
+  <timestamp>1620852204888</timestamp>
+  <startTime>1620852204901</startTime>
+  <result>FAILURE</result>
+  <duration>15658</duration>
+  <charset>UTF-8</charset>
+  <keepLog>false</keepLog>
+  <execution class="org.jenkinsci.plugins.workflow.cps.CpsFlowExecution">
+    <result>FAILURE</result>
+    <script>node {
+  env.REPO = &quot;https://github.com/Vicentezapata/IADSO_CIISA_IECS_REPO_TEST.git&quot;
+  stage(&apos;Descargar Codigo (SCM)&apos;) {
+    sh &quot;echo ${WORKSPACE}&quot;
+    timeout(time: 3, unit: &apos;MINUTES&apos;){
+      input = input(
+        id: &apos;userInput&apos;, messasge: &apos;Valores para PMV&apos;,
+        parameters: [
+          string(description: &apos;Nombre del proyecto&apos;, name: &apos;Name_Project&apos;,defaultValue: &apos;IADSO_CIISA_IECS_REPO_TEST&apos;),
+          string(description: &apos;Url de repositorio&apos;, name: &apos;Git_Url&apos;,defaultValue: &apos;https://github.com/Vicentezapata/IADSO_CIISA_IECS_REPO_TEST.git&apos;),
+          choice(
+            description: &apos;Tipo de repositorio&apos;,
+            choices: [&apos;Publico&apos;, &apos;Privado&apos;],
+            name: &apos;Type_Repo&apos;
+          ),
+          choice(
+            description: &apos;Categorizacion&apos;,
+            choices: [&apos;WEBPAGE&apos;, &apos;MOBILE&apos;],
+            name: &apos;Type_Cat&apos;
+          )
+        ]
+      )
+    }
+    git input.Git_Url
+  }
+
+  stage(&apos;Control SAST&apos;) {
+    // requires SonarQube Scanner 2.8+
+    sh &quot;**************************************************************************************************&quot;
+    sh &quot;*                                     CONTROL SAST                                               *&quot;
+    sh &quot;**************************************************************************************************&quot;
+    def scannerHome = tool &apos;sonarqube-scanner&apos;;//Mismo nombre que pusimos // en el global tool configuration
+    withSonarQubeEnv(&apos;SonarQube&apos;) { // El nombre de servidor que //pusimos en Configuración del sistema.
+        sh &quot;${scannerHome}/bin/sonar-scanner -Dsonar.projectKey=&apos;&quot;+input.Name_Project.replace(&quot; &quot;,&quot;_&quot;)+&quot;&apos; -Dsonar.sources=. -Dsonar.java.binaries=.&quot;
+    }
+  }
+  stage(&apos;Control DAST&apos;) {
+    sh &quot;**************************************************************************************************&quot;
+    sh &quot;*                                     CONTROL DAST                                               *&quot;
+    sh &quot;**************************************************************************************************&quot;  
+    def docker = tool &apos;docker&apos;;//Mismo nombre que pusimos // en el global tool configuration
+      //sh &quot;${docker}/bin/docker ps&quot;
+      sh &quot;${docker}/bin/docker run -dit --name apache-app -p 8085:80 -v &apos;/home/ciisa/Escritorio/Proyecto de titulo//jenkins-scripts/servidores_DAST/apache/&apos;:/usr/local/apache2/htdocs/ httpd:2.4&quot;
+      sh &quot;${docker}/bin/docker pull aquasec/trivy:latest&quot;
+      sh &quot;${docker}/bin/docker run --rm -v &apos;/home/ciisa/Escritorio/Proyecto de titulo/trivy/trivy-cache/&apos;:/root/.cache/ aquasec/trivy:latest httpd:2.4 &gt; &apos;/opt/scripts/OutputTrivy.txt&apos;&quot;
+      sh &quot;rm -rf /opt/scripts/servidores_DAST/apache/Capacitatec-landing-page&quot;
+      sh &quot;git clone ${REPO} /opt/scripts/servidores_DAST/apache/Capacitatec-landing-page&quot;
+      sh &quot;*************************************************************&quot; 
+      sh &quot;*************** Vulnerabilidades detectadas  ****************&quot; 
+      sh &quot;*************************************************************&quot; 
+      sh &quot;cat /opt/scripts/OutputTrivy.txt&quot;
+  }
+}</script>
+    <loadedScripts class="map"/>
+    <durabilityHint>MAX_SURVIVABILITY</durabilityHint>
+    <timings class="map">
+      <entry>
+        <string>flowNode</string>
+        <long>598992157</long>
+      </entry>
+      <entry>
+        <string>classLoad</string>
+        <long>2572124285</long>
+      </entry>
+      <entry>
+        <string>run</string>
+        <long>1849959533</long>
+      </entry>
+      <entry>
+        <string>parse</string>
+        <long>1799509581</long>
+      </entry>
+      <entry>
+        <string>saveProgram</string>
+        <long>429453548</long>
+      </entry>
+    </timings>
+    <sandbox>true</sandbox>
+    <iota>18</iota>
+    <head>1:18</head>
+    <done>true</done>
+    <resumeBlocked>false</resumeBlocked>
+  </execution>
+  <completed>true</completed>
+  <checkouts class="hudson.util.PersistedList"/>
+</flow-build>

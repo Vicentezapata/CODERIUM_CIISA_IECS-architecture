@@ -1,0 +1,106 @@
+<?xml version='1.1' encoding='UTF-8'?>
+<Tag plugin="workflow-support@3.8">
+  <node class="cps.n.StepAtomNode" plugin="workflow-cps@2.90">
+    <parentIds>
+      <string>8</string>
+    </parentIds>
+    <id>9</id>
+    <descriptorId>org.jenkinsci.plugins.workflow.support.steps.input.InputStep</descriptorId>
+  </node>
+  <actions>
+    <cps.a.ArgumentsActionImpl plugin="workflow-cps@2.90">
+      <arguments>
+        <entry>
+          <string>messasge</string>
+          <string>Valores para PMV</string>
+        </entry>
+        <entry>
+          <string>parameters</string>
+          <list>
+            <org.jenkinsci.plugins.workflow.cps.UninstantiatedDescribableWithInterpolation>
+              <symbol>string</symbol>
+              <arguments class="linked-hash-map">
+                <entry>
+                  <string>description</string>
+                  <string>Nombre del proyecto</string>
+                </entry>
+                <entry>
+                  <string>name</string>
+                  <string>nameProject</string>
+                </entry>
+              </arguments>
+              <interpolatedStrings/>
+            </org.jenkinsci.plugins.workflow.cps.UninstantiatedDescribableWithInterpolation>
+            <org.jenkinsci.plugins.workflow.cps.UninstantiatedDescribableWithInterpolation>
+              <symbol>string</symbol>
+              <arguments class="linked-hash-map">
+                <entry>
+                  <string>description</string>
+                  <string>Url de repositorio</string>
+                </entry>
+                <entry>
+                  <string>name</string>
+                  <string>gitUrl</string>
+                </entry>
+              </arguments>
+              <interpolatedStrings/>
+            </org.jenkinsci.plugins.workflow.cps.UninstantiatedDescribableWithInterpolation>
+            <org.jenkinsci.plugins.workflow.cps.UninstantiatedDescribableWithInterpolation>
+              <symbol>choice</symbol>
+              <arguments class="linked-hash-map">
+                <entry>
+                  <string>description</string>
+                  <string>Tipo de repositorio</string>
+                </entry>
+                <entry>
+                  <string>choices</string>
+                  <list>
+                    <string>Publico</string>
+                    <string>Privado</string>
+                  </list>
+                </entry>
+                <entry>
+                  <string>name</string>
+                  <string>typeRepo</string>
+                </entry>
+              </arguments>
+              <interpolatedStrings/>
+            </org.jenkinsci.plugins.workflow.cps.UninstantiatedDescribableWithInterpolation>
+          </list>
+        </entry>
+        <entry>
+          <string>id</string>
+          <string>userInput</string>
+        </entry>
+      </arguments>
+      <sensitiveVariables/>
+      <isUnmodifiedBySanitization>true</isUnmodifiedBySanitization>
+    </cps.a.ArgumentsActionImpl>
+    <wf.a.TimingAction plugin="workflow-api@2.42">
+      <startTime>1620711698470</startTime>
+    </wf.a.TimingAction>
+    <s.a.LogStorageAction/>
+    <s.a.PauseAction>
+      <cause>Input</cause>
+      <startTime>1620711698553</startTime>
+      <endTime>1620711711903</endTime>
+    </s.a.PauseAction>
+    <org.jenkinsci.plugins.workflow.support.steps.input.InputSubmittedAction plugin="pipeline-input-step@2.12">
+      <parameters class="linked-hash-map">
+        <entry>
+          <string>typeRepo</string>
+          <string>Publico</string>
+        </entry>
+        <entry>
+          <string>nameProject</string>
+          <string></string>
+        </entry>
+        <entry>
+          <string>gitUrl</string>
+          <string></string>
+        </entry>
+      </parameters>
+      <approver>vzapata</approver>
+    </org.jenkinsci.plugins.workflow.support.steps.input.InputSubmittedAction>
+  </actions>
+</Tag>

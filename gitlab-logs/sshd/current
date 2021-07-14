@@ -1,4 +1,0 @@
-2021-05-04_22:36:31.42037 Server listening on 0.0.0.0 port 22.
-2021-05-04_22:36:31.42047 Server listening on :: port 22.
-2021-05-04_23:03:21.06699 kex_exchange_identification: client sent invalid protocol identifier "GET / HTTP/1.1"
-2021-05-04_23:03:28.83797 kex_exchange_identification: client sent invalid protocol identifier "GET /favicon.ico HTTP/1.1"

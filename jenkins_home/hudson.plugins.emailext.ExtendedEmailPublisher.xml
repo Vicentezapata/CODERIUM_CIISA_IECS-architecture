@@ -1,9 +1,12 @@
 <?xml version='1.1' encoding='UTF-8'?>
 <hudson.plugins.emailext.ExtendedEmailPublisherDescriptor plugin="email-ext@2.82">
+  <defaultSuffix>@gmail.com</defaultSuffix>
   <mailAccount>
-    <smtpPort>25</smtpPort>
-    <smtpPassword>{AQAAABAAAAAQu1dS5LghxWIUqPjLa/yOeGFmlcz4s1xbuhkr9PZOgcE=}</smtpPassword>
-    <useSsl>false</useSsl>
+    <smtpHost>smtp.gmail.com</smtpHost>
+    <smtpPort>587</smtpPort>
+    <smtpUsername>testvzapataciisa</smtpUsername>
+    <smtpPassword>{AQAAABAAAAAQSBfXtjm+u39IJOCuls/8XoIlAHxGsMdjxCFRoxk5Bp8=}</smtpPassword>
+    <useSsl>true</useSsl>
     <advProperties></advProperties>
     <defaultAccount>true</defaultAccount>
   </mailAccount>
@@ -18,7 +21,7 @@ Check console output at $BUILD_URL to view the results.</defaultBody>
   <defaultPostsendScript></defaultPostsendScript>
   <defaultClasspath/>
   <defaultTriggerIds>
-    <string>hudson.plugins.emailext.plugins.trigger.FailureTrigger</string>
+    <string>hudson.plugins.emailext.plugins.trigger.SuccessTrigger</string>
   </defaultTriggerIds>
   <emergencyReroute></emergencyReroute>
   <maxAttachmentSize>-1</maxAttachmentSize>
@@ -31,5 +34,5 @@ Check console output at $BUILD_URL to view the results.</defaultBody>
   <debugMode>false</debugMode>
   <requireAdminForTemplateTesting>false</requireAdminForTemplateTesting>
   <enableWatching>false</enableWatching>
-  <enableAllowUnregistered>false</enableAllowUnregistered>
+  <enableAllowUnregistered>true</enableAllowUnregistered>
 </hudson.plugins.emailext.ExtendedEmailPublisherDescriptor>

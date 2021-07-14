@@ -1,0 +1,161 @@
+<?xml version='1.1' encoding='UTF-8'?>
+<Tag plugin="workflow-support@3.8">
+  <node class="cps.n.StepAtomNode" plugin="workflow-cps@2.90">
+    <parentIds>
+      <string>11</string>
+    </parentIds>
+    <id>12</id>
+    <descriptorId>org.jenkinsci.plugins.workflow.support.steps.input.InputStep</descriptorId>
+  </node>
+  <actions>
+    <cps.a.ArgumentsActionImpl plugin="workflow-cps@2.90">
+      <arguments>
+        <entry>
+          <string>messasge</string>
+          <string>Valores para PMV</string>
+        </entry>
+        <entry>
+          <string>parameters</string>
+          <list>
+            <org.jenkinsci.plugins.workflow.cps.UninstantiatedDescribableWithInterpolation>
+              <symbol>string</symbol>
+              <arguments class="linked-hash-map">
+                <entry>
+                  <string>description</string>
+                  <string>Nombre del proyecto</string>
+                </entry>
+                <entry>
+                  <string>name</string>
+                  <string>Name_Project</string>
+                </entry>
+                <entry>
+                  <string>defaultValue</string>
+                  <string>IADSO_CIISA_IECS_REPO_TEST</string>
+                </entry>
+              </arguments>
+              <interpolatedStrings/>
+            </org.jenkinsci.plugins.workflow.cps.UninstantiatedDescribableWithInterpolation>
+            <org.jenkinsci.plugins.workflow.cps.UninstantiatedDescribableWithInterpolation>
+              <symbol>string</symbol>
+              <arguments class="linked-hash-map">
+                <entry>
+                  <string>description</string>
+                  <string>Url de repositorio</string>
+                </entry>
+                <entry>
+                  <string>name</string>
+                  <string>Git_Url</string>
+                </entry>
+                <entry>
+                  <string>defaultValue</string>
+                  <string>https://github.com/Vicentezapata/IADSO_CIISA_IECS_REPO_TEST.git</string>
+                </entry>
+              </arguments>
+              <interpolatedStrings/>
+            </org.jenkinsci.plugins.workflow.cps.UninstantiatedDescribableWithInterpolation>
+            <org.jenkinsci.plugins.workflow.cps.UninstantiatedDescribableWithInterpolation>
+              <symbol>choice</symbol>
+              <arguments class="linked-hash-map">
+                <entry>
+                  <string>description</string>
+                  <string>Tipo de repositorio</string>
+                </entry>
+                <entry>
+                  <string>choices</string>
+                  <list>
+                    <string>Publico</string>
+                    <string>Privado</string>
+                  </list>
+                </entry>
+                <entry>
+                  <string>name</string>
+                  <string>Type_Repo</string>
+                </entry>
+              </arguments>
+              <interpolatedStrings/>
+            </org.jenkinsci.plugins.workflow.cps.UninstantiatedDescribableWithInterpolation>
+            <org.jenkinsci.plugins.workflow.cps.UninstantiatedDescribableWithInterpolation>
+              <symbol>choice</symbol>
+              <arguments class="linked-hash-map">
+                <entry>
+                  <string>description</string>
+                  <string>Categorizacion</string>
+                </entry>
+                <entry>
+                  <string>choices</string>
+                  <list>
+                    <string>WEBPAGE</string>
+                    <string>MOBILE</string>
+                  </list>
+                </entry>
+                <entry>
+                  <string>name</string>
+                  <string>Type_Cat</string>
+                </entry>
+              </arguments>
+              <interpolatedStrings/>
+            </org.jenkinsci.plugins.workflow.cps.UninstantiatedDescribableWithInterpolation>
+            <org.jenkinsci.plugins.workflow.cps.UninstantiatedDescribableWithInterpolation>
+              <symbol>string</symbol>
+              <arguments class="linked-hash-map">
+                <entry>
+                  <string>description</string>
+                  <string>Correo del destinatario</string>
+                </entry>
+                <entry>
+                  <string>name</string>
+                  <string>Email</string>
+                </entry>
+                <entry>
+                  <string>defaultValue</string>
+                  <string>vicentezapatac@gmail.com</string>
+                </entry>
+              </arguments>
+              <interpolatedStrings/>
+            </org.jenkinsci.plugins.workflow.cps.UninstantiatedDescribableWithInterpolation>
+          </list>
+        </entry>
+        <entry>
+          <string>id</string>
+          <string>userInput</string>
+        </entry>
+      </arguments>
+      <sensitiveVariables/>
+      <isUnmodifiedBySanitization>true</isUnmodifiedBySanitization>
+    </cps.a.ArgumentsActionImpl>
+    <wf.a.TimingAction plugin="workflow-api@2.42">
+      <startTime>1621653311277</startTime>
+    </wf.a.TimingAction>
+    <s.a.LogStorageAction/>
+    <s.a.PauseAction>
+      <cause>Input</cause>
+      <startTime>1621653311309</startTime>
+      <endTime>1621653318555</endTime>
+    </s.a.PauseAction>
+    <org.jenkinsci.plugins.workflow.support.steps.input.InputSubmittedAction plugin="pipeline-input-step@2.12">
+      <parameters class="linked-hash-map">
+        <entry>
+          <string>Name_Project</string>
+          <string>IADSO_CIISA_IECS_REPO_TEST</string>
+        </entry>
+        <entry>
+          <string>Type_Repo</string>
+          <string>Publico</string>
+        </entry>
+        <entry>
+          <string>Email</string>
+          <string>vicentezapatac@gmail.com</string>
+        </entry>
+        <entry>
+          <string>Git_Url</string>
+          <string>https://github.com/Vicentezapata/IADSO_CIISA_IECS_REPO_TEST.git</string>
+        </entry>
+        <entry>
+          <string>Type_Cat</string>
+          <string>WEBPAGE</string>
+        </entry>
+      </parameters>
+      <approver>vzapata</approver>
+    </org.jenkinsci.plugins.workflow.support.steps.input.InputSubmittedAction>
+  </actions>
+</Tag>
