@@ -11,3 +11,7 @@
 /sonarcube-db
 /trivy
 
+#ignorando carpetas de jenkins_home
+/jenkins_home/caches/*
+/jenkins_home/logs/*
+/jenkins_home/workspace/*
