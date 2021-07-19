@@ -15,3 +15,4 @@
 /jenkins_home/caches/*
 /jenkins_home/logs/*
 /jenkins_home/workspace/*
+/jenkins_home/jobs/**/builds/*
